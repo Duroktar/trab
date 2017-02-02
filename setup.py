@@ -1,7 +1,7 @@
 from os import path
 from setuptools import setup
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 SETUP_DIR = path.abspath(path.dirname(__file__))
 

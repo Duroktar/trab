@@ -11,7 +11,7 @@ Example -
 
 ``` python
 
-    import trabConfig
+    from trabconfig import trabConfig
 
     # load file verbatim
     config = trabConfig("config.json", autosave=False, data='json')

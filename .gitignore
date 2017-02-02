@@ -1,0 +1,5 @@
+/venv/
+/trabConfig.egg-info/
+/dist/
+/build/
+/.idea/

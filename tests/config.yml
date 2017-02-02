@@ -1,0 +1,6 @@
+Parent: child
+Parent2: [child number one, child number two]
+ip: localhost
+key: ABC1234
+port: '54657'
+test2: test

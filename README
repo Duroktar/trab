@@ -4,6 +4,20 @@ trabConfig
 A simple Config file parser that supports json, and yaml formats with auto-save feature.
 
 
+Installation
+------------
+
+from pip ::
+
+    pip install trabConfig
+
+or the old fashioned way ::
+
+    python setup.py install
+
+*NOTE: wheels and source dists also available on pypi*
+
+
 Usage
 -----
 

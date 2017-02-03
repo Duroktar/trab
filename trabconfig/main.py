@@ -138,24 +138,30 @@ class trabConfig():
     def _load_from_dict(self):
         with open(self._file_path, 'rb') as f:
             try:
-                self._config_data = ast.literal_eval(f.read())
+                ast.literal_eval(self._read_file())
             except SyntaxError:
                 return
 
     def _load_from_yaml(self):
         with open(self._file_path, 'rb') as f:
             try:
-                self._config_data = yaml.safe_load(f.read())
+                yaml.safe_load(self._read_file())
             except SyntaxError:
                 return
 
     def _save_to_dict(self):
-        with open(self._file_path, 'wb') as f:
-            f.write(json.dumps(self._config_data))
+        self._save_file(json.dumps(self._config_data))
 
     def _save_to_yaml(self):
+        self._save_file(yaml.safe_dump(self._config_data))
+
+    def _read_file(self):
+        with open(self._file_path, 'rb') as f:
+            return f.read()
+
+    def _save_file(self, data):
         with open(self._file_path, 'wb') as f:
-            f.write(yaml.safe_dump(self._config_data))
+            f.write(data)
 
     @staticmethod
     def from_yaml(file_path, auto_save=False):

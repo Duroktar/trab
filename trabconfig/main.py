@@ -17,6 +17,7 @@
 """
 from __future__ import print_function
 import json
+import ast
 import yaml
 
 
@@ -43,6 +44,12 @@ class trabConfig():
           keys()           # Returns a list of the keys in the config file.
           values()         # Returns a list of the values in the config file.
 
+        Convenience methods
+        -------------------
+
+          from_yaml(file, auto_save)  # load a `yaml` config file. Added: v0.1.5
+
+
         Initialization is as easy as -
 
             import trabConfig
@@ -63,7 +70,7 @@ class trabConfig():
         self._file_path = path
         self.auto_save = autosave
         self._format = data
-        self._config_data = None
+        self._config_data = {}
         self._load_cfg()
 
     def get(self, key, d=None):
@@ -114,20 +121,33 @@ class trabConfig():
     def __setitem__(self, key, value):
         self._config_data[key] = value
 
-    def _load_from_dict(self):
-        with open(self._file_path, 'rb') as f:
-            self._config_data = json.loads(f.read())
-
-    def _load_from_yaml(self):
-        with open(self._file_path, 'rb') as f:
-            self._config_data = yaml.safe_load(f.read())
-
     def _load_cfg(self):
         formats = {
             "dict": self._load_from_dict,
             "yaml": self._load_from_yaml,
         }
         return formats[self._format]()
+
+    def _save_cfg(self):
+        formats = {
+            "dict": self._save_to_dict,
+            "yaml": self._save_to_yaml,
+        }
+        formats[self._format]()
+
+    def _load_from_dict(self):
+        with open(self._file_path, 'rb') as f:
+            try:
+                self._config_data = ast.literal_eval(f.read())
+            except SyntaxError:
+                return
+
+    def _load_from_yaml(self):
+        with open(self._file_path, 'rb') as f:
+            try:
+                self._config_data = yaml.safe_load(f.read())
+            except SyntaxError:
+                return
 
     def _save_to_dict(self):
         with open(self._file_path, 'wb') as f:
@@ -137,9 +157,6 @@ class trabConfig():
         with open(self._file_path, 'wb') as f:
             f.write(yaml.safe_dump(self._config_data))
 
-    def _save_cfg(self):
-        formats = {
-            "dict": self._save_to_dict,
-            "yaml": self._save_to_yaml,
-        }
-        formats[self._format]()
+    @staticmethod
+    def from_yaml(file_path, auto_save=False):
+        return trabConfig(file_path, auto_save, data="yaml")

@@ -17,6 +17,7 @@
 """
 from __future__ import print_function
 import json
+import ast
 import yaml
 
 
@@ -63,7 +64,7 @@ class trabConfig():
         self._file_path = path
         self.auto_save = autosave
         self._format = data
-        self._config_data = None
+        self._config_data = {}
         self._load_cfg()
 
     def get(self, key, d=None):
@@ -116,11 +117,17 @@ class trabConfig():
 
     def _load_from_dict(self):
         with open(self._file_path, 'rb') as f:
-            self._config_data = json.loads(f.read())
+            try:
+                self._config_data = ast.literal_eval(f.read())
+            except SyntaxError:
+                return
 
     def _load_from_yaml(self):
         with open(self._file_path, 'rb') as f:
-            self._config_data = yaml.safe_load(f.read())
+            try:
+                self._config_data = yaml.safe_load(f.read())
+            except SyntaxError:
+                return
 
     def _load_cfg(self):
         formats = {
